@@ -16,6 +16,7 @@ datasource db {
 }
 model UserAccount {
     id String @id @default(auto()) @map("_id") @db.ObjectId
+    email String
     username String
     password String
     todos Todos[]

@@ -17,8 +17,6 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 }) => {
   const { data: profile } = api.profile.getAccountByID.useQuery({ id });
 
-  console.log(profile);
-
   if (profile === null || profile === undefined)
     return <h1>Error Fetching Userinfo</h1>;
 

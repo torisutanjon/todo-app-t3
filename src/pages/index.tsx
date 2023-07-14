@@ -1,10 +1,8 @@
-"use client";
-
 import Head from "next/head";
-import Link from "next/link";
 import Image from "next/image";
 import add_image from "./assets/add.png";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
 
 interface TodoTypes {
   id: string;
@@ -19,31 +17,10 @@ interface CommentTypes {
   body: string;
 }
 
-interface UserTypes {
-  id: string;
-  email: string;
-  username: string;
-}
-
 export default function Home() {
-  const [user, setUser] = useState<UserTypes>();
+  const { data: sessionData } = useSession();
   const [todo, setTodo] = useState<TodoTypes>();
 
-  const getToken = () => {
-    const token = localStorage.getItem("userToken");
-    if (!token) return;
-    const data = JSON.parse(token) as UserTypes;
-
-    setUser({
-      id: data.id,
-      email: data.email,
-      username: data.username,
-    });
-  };
-
-  useEffect(() => {
-    getToken();
-  }, []);
   return (
     <>
       <Head>
@@ -61,23 +38,15 @@ export default function Home() {
           </div>
         </div>
         <div className="relative flex h-full w-[85%]">
-          {user === undefined ? (
-            <div className="relative flex h-full w-full flex-col items-center justify-center">
-              <Link
-                href="/login"
-                className="absolute right-[20px] top-[15px] text-[14px] font-medium"
-              >
-                LOGIN
-              </Link>
-              <p className="text-[#343434]">Login first to create todo list</p>
-            </div>
-          ) : (
+          {sessionData ? (
             <div className="relatiev flex h-full w-full flex-col items-center justify-center">
               <button
                 className="absolute right-[15px] top-[10px] h-[45px] w-[45px] rounded-[50px] bg-[#343434] text-[24px] font-medium text-[white]/75"
-                onClick={() => (window.location.href = `/profile/${user.id}`)}
+                onClick={() =>
+                  (window.location.href = `/profile/${sessionData.user.id}`)
+                }
               >
-                T
+                {sessionData.user.name?.charAt(0)}
               </button>
               {todo === undefined ? (
                 <p className="m-0 p-0 text-[#343434]">
@@ -118,6 +87,16 @@ export default function Home() {
                   </div>
                 </>
               )}
+            </div>
+          ) : (
+            <div className="relative flex h-full w-full flex-col items-center justify-center">
+              <p
+                className="absolute right-[20px] top-[15px] text-[14px] font-medium"
+                onClick={() => void signIn()}
+              >
+                Sign In
+              </p>
+              <p className="text-[#343434]">Login first to create todo list</p>
             </div>
           )}
         </div>

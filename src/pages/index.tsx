@@ -46,7 +46,7 @@ export default function Home() {
                   (window.location.href = `/profile/${sessionData.user.id}`)
                 }
               >
-                {sessionData.user.name?.charAt(0)}
+                {sessionData.user.name?.charAt(0).toUpperCase()}
               </button>
               {todo === undefined ? (
                 <p className="m-0 p-0 text-[#343434]">

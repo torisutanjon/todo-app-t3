@@ -42,9 +42,7 @@ export default function Home() {
             <div className="relatiev flex h-full w-full flex-col items-center justify-center">
               <button
                 className="absolute right-[15px] top-[10px] h-[45px] w-[45px] rounded-[50px] bg-[#343434] text-[24px] font-medium text-[white]/75"
-                onClick={() =>
-                  (window.location.href = `/profile/${sessionData.user.id}`)
-                }
+                onClick={() => (window.location.href = `/profile`)}
               >
                 {sessionData.user.name?.charAt(0).toUpperCase()}
               </button>

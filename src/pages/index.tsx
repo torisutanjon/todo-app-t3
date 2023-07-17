@@ -19,6 +19,9 @@ interface CommentTypes {
 
 export default function Home() {
   const { data: sessionData } = useSession();
+
+  console.log(sessionData);
+
   const [todo, setTodo] = useState<TodoTypes>();
 
   return (

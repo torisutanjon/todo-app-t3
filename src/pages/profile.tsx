@@ -13,11 +13,6 @@ const ProfilePage = () => {
     return (window.location.href = "/");
   }
 
-  const logoutHandler = () => {
-    void signOut();
-    window.location.href = "/";
-  };
-
   return (
     <>
       <Head>
@@ -31,7 +26,7 @@ const ProfilePage = () => {
         <div className="absolute bottom-[10%] flex flex-col items-center justify-end">
           <button
             className="mb-[15px] h-[40px] w-[175px] bg-[#383838] text-[14px] text-white/75"
-            onClick={() => logoutHandler()}
+            onClick={() => void signOut()}
           >
             Logout
           </button>

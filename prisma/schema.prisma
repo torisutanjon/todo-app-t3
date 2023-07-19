@@ -76,8 +76,8 @@ model Comments {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     body String
     creatorName String
-    commentID String @db.ObjectId
-    comment Todos @relation(fields: [commentID], references: [id])
+    todoID String @db.ObjectId
+    todo Todos @relation(fields: [todoID], references: [id])
     creatorID String @db.ObjectId
     creator Account @relation(fields: [creatorID], references: [id])
 }

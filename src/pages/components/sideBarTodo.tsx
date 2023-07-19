@@ -13,7 +13,14 @@ const SideBarTodo = ({ id, index, displayTodoHandler }: PropTypes) => {
   const todoInfoMutation = api.todo.getTodoByID.useMutation({
     onSuccess: (res) => {
       if (res === null) return;
-      displayTodoHandler(<TodoComponent title={res.title} body={res.body} />);
+      displayTodoHandler(
+        <TodoComponent
+          id={res.id}
+          title={res.title}
+          body={res.body}
+          creatorID={res.creatorID}
+        />
+      );
     },
     onError: () => {
       displayTodoHandler(

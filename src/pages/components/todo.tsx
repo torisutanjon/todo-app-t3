@@ -1,16 +1,52 @@
 "use client";
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
+import { api } from "@/utils/api";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import loading_gif from "../assets/loading.gif";
 interface PropTypes {
+  id: string;
   title: string;
   body: string;
+  creatorID: string;
 }
 
-const TodoComponent = ({ title, body }: PropTypes) => {
+const TodoComponent = ({ id, title, body, creatorID }: PropTypes) => {
+  const { data: sessionData } = useSession();
+
+  const commentMutation = api.comment.addComment.useMutation({
+    onSuccess: (res) => {
+      console.log(res);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const todoMutation = api.todo.updateTodo.useMutation({
+    onSuccess: (res) => {
+      window.alert(res.message);
+      window.location.reload();
+    },
+    onError: (err) => {
+      window.alert(err.message);
+    },
+  });
+
   const [todoInfo, setTodoInfo] = useState({
     title: title,
     body: body,
   });
+
+  const [component, setComponent] = useState(<></>);
+
+  const loadingComponent = () => {
+    return (
+      <div className="fixed z-[1] flex h-[85%] w-[85%] items-center justify-center">
+        <Image src={loading_gif} alt="" height={50} width={50} />
+      </div>
+    );
+  };
 
   const inputOnChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -19,6 +55,7 @@ const TodoComponent = ({ title, body }: PropTypes) => {
       [name]: value,
     }));
   };
+
   const textAreaOnChangeHandler = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
@@ -29,6 +66,34 @@ const TodoComponent = ({ title, body }: PropTypes) => {
     }));
   };
 
+  const addCommentHandler = () => {
+    if (sessionData === null) {
+      window.alert("Please login first");
+    }
+
+    const comment = document.getElementById(
+      "addComment_input"
+    ) as HTMLInputElement;
+
+    if (comment.value === "") return window.alert("Can't add an empty comment");
+
+    commentMutation.mutate({
+      todoID: id,
+      comment: comment.value,
+    });
+
+    comment.value === "";
+  };
+
+  const updateTodoHandler = () => {
+    setComponent(loadingComponent());
+    todoMutation.mutate({
+      id: id,
+      title: todoInfo.title,
+      body: todoInfo.body,
+    });
+  };
+
   return (
     <>
       <div className="mb-[25px] flex w-[75%] flex-col items-start justify-between">
@@ -36,28 +101,53 @@ const TodoComponent = ({ title, body }: PropTypes) => {
         <input
           type="text"
           className="h-[35px] w-full border-b-[1px] border-b-black/75 pl-[5px] outline-none"
+          name="title"
           value={todoInfo.title}
           onChange={inputOnChangeHandler}
         />
       </div>
-      <div className="mb-[25px] flex w-[75%] flex-col items-start justify-between">
+      <div className="mb-[5px] flex w-[75%] flex-col items-start justify-between">
         <p className="text-[14px] font-bold">Todo Body:</p>
         <textarea
-          name=""
+          name="body"
           id=""
           className="h-[100px] w-full border-[1px] border-black/75 p-[5px] outline-none"
           value={todoInfo.body}
           onChange={textAreaOnChangeHandler}
         />
       </div>
+      {sessionData?.user.id === creatorID ? (
+        <div className="relative mb-[20px] flex h-[25px] w-[75%] flex-row items-center justify-end">
+          {body === todoInfo.body && title === todoInfo.title ? (
+            <></>
+          ) : (
+            <button
+              className="relative mr-[25px] h-[20px] w-[65px] rounded-[4px] bg-[#343434] text-[12px] text-white/50"
+              onClick={() => updateTodoHandler()}
+            >
+              Update
+            </button>
+          )}
+
+          <button className="relative h-[20px] w-[65px] rounded-[4px] bg-[#343434] text-[12px] text-white/50">
+            Delete
+          </button>
+        </div>
+      ) : (
+        <></>
+      )}
       <div className="mb-[25px] flex w-[75%] flex-col items-start justify-between">
         <p className="text-[12px] font-bold">Add Comment:</p>
         <div className="flex w-full flex-col items-end justify-between">
           <input
             type="text"
-            className="mb-[5px] h-[25px] w-[75%] border-b-[1px] border-b-black/75 pl-[5px] outline-none"
+            className="mb-[5px] h-[25px] w-full border-b-[1px] border-b-black/75 pl-[5px] text-[14px] text-black/75 outline-none"
+            id="addComment_input"
           />
-          <button className="h-[20px] w-[75px] rounded-[4px] bg-[#343434] text-[12px] text-white">
+          <button
+            className="h-[25px] w-[75px] rounded-[4px] bg-[#343434] text-[12px] text-white/50"
+            onClick={() => addCommentHandler()}
+          >
             Add
           </button>
         </div>
@@ -66,6 +156,7 @@ const TodoComponent = ({ title, body }: PropTypes) => {
         <p className="text-[14px] font-bold">Comments:</p>
         <div className="relative h-[80%] w-full overflow-y-auto border-[1px] border-black/75"></div>
       </div>
+      {component}
     </>
   );
 };

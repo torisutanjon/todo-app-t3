@@ -3,6 +3,15 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { z } from "zod";
 
 export const todoRouter = createTRPCRouter({
+  getTodos: publicProcedure.query(async ({ ctx }) => {
+    const todos = await ctx.prisma.todos.findMany({
+      select: {
+        id: true,
+        creatorID: true,
+      },
+    });
+    return todos;
+  }),
   getTodoByID: publicProcedure
     .input(
       z.object({
@@ -18,14 +27,6 @@ export const todoRouter = createTRPCRouter({
 
       return todo;
     }),
-  getTodos: publicProcedure.query(async ({ ctx }) => {
-    const todos = await ctx.prisma.todos.findMany({
-      select: {
-        id: true,
-      },
-    });
-    return todos;
-  }),
   addTodo: protectedProcedure
     .input(
       z.object({
@@ -53,4 +54,36 @@ export const todoRouter = createTRPCRouter({
         message: "Todo Created",
       };
     }),
+  updateTodo: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        body: z.string(),
+      })
+    )
+    .mutation(
+      async ({ input: { id, title, body }, ctx: { prisma, session } }) => {
+        try {
+          await prisma.todos.update({
+            where: {
+              id: id,
+            },
+            data: {
+              title: title,
+              body: body,
+            },
+          });
+
+          return {
+            message: "Todo Updated",
+          };
+        } catch (error) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Internal Server Error",
+          });
+        }
+      }
+    ),
 });

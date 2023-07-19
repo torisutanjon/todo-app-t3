@@ -78,7 +78,7 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="relative flex h-full w-[85%]">
+        <div className="relative flex flex h-full w-[85%] items-center justify-center">
           <div className="relatiev flex h-full w-full flex-col items-center justify-center">
             {sessionData ? (
               <button

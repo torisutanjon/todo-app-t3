@@ -9,7 +9,7 @@ export const todoRouter = createTRPCRouter({
         id: z.string(),
       })
     )
-    .query(async ({ input: { id }, ctx }) => {
+    .mutation(async ({ input: { id }, ctx }) => {
       const todo = await ctx.prisma.todos.findUnique({
         where: {
           id: id,

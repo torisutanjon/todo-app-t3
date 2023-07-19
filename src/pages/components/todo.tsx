@@ -1,23 +1,16 @@
 "use client";
-
-import { api } from "@/utils/api";
 import { useEffect, useState } from "react";
 
-const TodoComponent = ({ id }: { id: string }) => {
-  const todo = api.todo.getTodoByID.useQuery({ id: id });
-  const [todoInfo, setTodoInfo] = useState({
-    title: "",
-    body: "",
-  });
+interface PropTypes {
+  title: string;
+  body: string;
+}
 
-  const checkTodoHandler = () => {
-    if (todo.data !== null && todo.data !== undefined) {
-      setTodoInfo({
-        title: todo.data.title,
-        body: todo.data.body,
-      });
-    }
-  };
+const TodoComponent = ({ title, body }: PropTypes) => {
+  const [todoInfo, setTodoInfo] = useState({
+    title: title,
+    body: body,
+  });
 
   const inputOnChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -35,10 +28,6 @@ const TodoComponent = ({ id }: { id: string }) => {
       [name]: value,
     }));
   };
-
-  useEffect(() => {
-    void checkTodoHandler();
-  }, [todo.data]);
 
   return (
     <>

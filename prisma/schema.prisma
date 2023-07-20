@@ -77,7 +77,7 @@ model Comments {
     body String
     creatorName String
     todoID String @db.ObjectId
-    todo Todos @relation(fields: [todoID], references: [id])
+    todo Todos @relation(fields: [todoID], references: [id], onDelete: Cascade)
     creatorID String @db.ObjectId
     creator Account @relation(fields: [creatorID], references: [id])
 }

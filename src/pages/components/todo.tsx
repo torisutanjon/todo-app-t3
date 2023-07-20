@@ -1,31 +1,51 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "@/utils/api";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import loading_gif from "../assets/loading.gif";
+import CommentComponent from "./comment";
 interface PropTypes {
   id: string;
   title: string;
   body: string;
   creatorID: string;
 }
+interface CommentTypes {
+  id: string;
+  body: string;
+  creatorName: string;
+  creatorID: string;
+}
 
 const TodoComponent = ({ id, title, body, creatorID }: PropTypes) => {
   const { data: sessionData } = useSession();
 
-  const commentMutation = api.comment.addComment.useMutation({
-    onSuccess: (res) => {
-      console.log(res);
+  const commentQuery = api.comment.getCommentByTodo.useQuery({ todoID: id });
+
+  const addComment = api.comment.addComment.useMutation({
+    onSuccess: () => {
+      window.alert("Comment Added");
+      window.location.reload();
     },
     onError: (err) => {
-      console.log(err);
+      window.alert(err.message);
     },
   });
 
-  const todoMutation = api.todo.updateTodo.useMutation({
+  const updateTodo = api.todo.updateTodo.useMutation({
     onSuccess: (res) => {
       window.alert(res.message);
+      window.location.reload();
+    },
+    onError: (err) => {
+      window.alert(err.message);
+    },
+  });
+
+  const deleteTodo = api.todo.deleteTodo.useMutation({
+    onSuccess: () => {
+      window.alert("Todo Deleted");
       window.location.reload();
     },
     onError: (err) => {
@@ -39,6 +59,7 @@ const TodoComponent = ({ id, title, body, creatorID }: PropTypes) => {
   });
 
   const [component, setComponent] = useState(<></>);
+  const [comments, setComments] = useState<Array<CommentTypes>>();
 
   const loadingComponent = () => {
     return (
@@ -68,7 +89,7 @@ const TodoComponent = ({ id, title, body, creatorID }: PropTypes) => {
 
   const addCommentHandler = () => {
     if (sessionData === null) {
-      window.alert("Please login first");
+      return window.alert("Please login first");
     }
 
     const comment = document.getElementById(
@@ -77,7 +98,7 @@ const TodoComponent = ({ id, title, body, creatorID }: PropTypes) => {
 
     if (comment.value === "") return window.alert("Can't add an empty comment");
 
-    commentMutation.mutate({
+    addComment.mutate({
       todoID: id,
       comment: comment.value,
     });
@@ -87,12 +108,20 @@ const TodoComponent = ({ id, title, body, creatorID }: PropTypes) => {
 
   const updateTodoHandler = () => {
     setComponent(loadingComponent());
-    todoMutation.mutate({
+    updateTodo.mutate({
       id: id,
       title: todoInfo.title,
       body: todoInfo.body,
     });
   };
+
+  useEffect(() => {
+    if (commentQuery.isFetching === false) {
+      if (commentQuery.data !== undefined) {
+        setComments(commentQuery.data);
+      }
+    }
+  }, [commentQuery]);
 
   return (
     <>
@@ -129,7 +158,14 @@ const TodoComponent = ({ id, title, body, creatorID }: PropTypes) => {
             </button>
           )}
 
-          <button className="relative h-[20px] w-[65px] rounded-[4px] bg-[#343434] text-[12px] text-white/50">
+          <button
+            className="relative h-[20px] w-[65px] rounded-[4px] bg-[#343434] text-[12px] text-white/50"
+            onClick={() =>
+              deleteTodo.mutate({
+                todoID: id,
+              })
+            }
+          >
             Delete
           </button>
         </div>
@@ -154,7 +190,23 @@ const TodoComponent = ({ id, title, body, creatorID }: PropTypes) => {
       </div>
       <div className="relative flex h-[30%] w-[90%] flex-col items-start justify-start">
         <p className="text-[14px] font-bold">Comments:</p>
-        <div className="relative h-[80%] w-full overflow-y-auto border-[1px] border-black/75"></div>
+        <div className="relative h-[80%] w-full overflow-hidden overflow-y-auto overflow-y-auto border-[1px] border-black/75">
+          {comments === undefined ? (
+            <></>
+          ) : (
+            comments.map((comment) => {
+              return (
+                <CommentComponent
+                  key={comment.id}
+                  id={comment.id}
+                  body={comment.body}
+                  creatorName={comment.creatorName}
+                  creatorID={comment.creatorID}
+                />
+              );
+            })
+          )}
+        </div>
       </div>
       {component}
     </>

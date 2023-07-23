@@ -57,7 +57,7 @@ const CommentComponent = ({ id, body, creatorName, creatorID }: PropTypes) => {
           <div className="flex h-[25px] w-1/2 flex-row items-center justify-end self-end">
             {body !== commentValue && (
               <button
-                className="mr-[10px] h-[20px] w-[55px] bg-[#1e1e1e]/75 text-[10px] text-white/75"
+                className="mr-[10px] h-[20px] w-[55px] bg-[#1e1e1e]/75 text-[10px] text-white/75 md:mt-[5px]"
                 onClick={() =>
                   updateCommentHandler.mutate({
                     commentID: id,
@@ -69,7 +69,7 @@ const CommentComponent = ({ id, body, creatorName, creatorID }: PropTypes) => {
               </button>
             )}
             <button
-              className="h-[20px] w-[55px] bg-[#1e1e1e]/75 text-[10px] text-white/75"
+              className="h-[20px] w-[55px] bg-[#1e1e1e]/75 text-[10px] text-white/75 md:mt-[5px]"
               onClick={() =>
                 deleteCommentHandler.mutate({
                   commentID: id,

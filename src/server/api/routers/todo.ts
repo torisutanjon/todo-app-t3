@@ -8,6 +8,7 @@ export const todoRouter = createTRPCRouter({
       select: {
         id: true,
         creatorID: true,
+        title: true,
       },
     });
     return todos;

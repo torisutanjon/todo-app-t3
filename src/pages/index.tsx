@@ -8,16 +8,29 @@ import { signIn, useSession } from "next-auth/react";
 import AppTodo from "./components/addTodo";
 import { api } from "@/utils/api";
 import SideBarTodoComponent from "./components/sideBarTodo";
+import { useMediaQuery } from "react-responsive";
 
 export default function Home() {
   const { data: sessionData } = useSession();
-  const [todoState, setTodoState] = useState<Array<{ id: string }>>();
+  const [todoState, setTodoState] =
+    useState<Array<{ id: string; title: string }>>();
   const [component, setComponent] = useState(<></>);
   const [todoComponent, setTodoComponent] = useState(
     <>
       <p className="m-0 p-0 text-[#343434]">Please Select Todo to View</p>
     </>
   );
+
+  const isDesktopOrLaptop = useMediaQuery({
+    query: "(min-width: 1224px)",
+  });
+
+  //for react-responsive components
+  const [addButton, setAddButton] = useState(
+    <Image src={add_image} alt="" height={30} width={30} />
+  );
+  const [todoText, setTodoText] = useState(<>Todos:</>);
+  const [hiddenDiv, setHiddenDiv] = useState(<></>);
 
   const todos = api.todo.getTodos.useQuery();
 
@@ -41,6 +54,16 @@ export default function Home() {
     }
   }, [todos]);
 
+  useEffect(() => {
+    {
+      isDesktopOrLaptop && [
+        setAddButton(<>+ Add Todo</>),
+        setTodoText(<>To do list:</>),
+        setHiddenDiv(<div className="h-[35px] w-full"></div>),
+      ];
+    }
+  }, []);
+
   return (
     <>
       <Head>
@@ -51,17 +74,20 @@ export default function Home() {
       <main className="absolute left-0 top-0 flex h-screen w-screen flex-row items-center justify-center">
         <div className="relative flex h-full w-[15%] flex-col items-center justify-start bg-[#343434]">
           <button
-            className="relative mt-[25px] h-[30px] w-[30px]"
+            className="relative mt-[25px] h-[30px] w-[30px] md:h-[30px] md:w-[130px] md:bg-white md:text-[12px]"
             onClick={
               sessionData === null
                 ? () => window.alert("Please login first")
                 : () => setAddTodoHandler()
             }
           >
-            <Image src={add_image} alt="" height={30} width={30} />
+            {addButton}
           </button>
           <div className="relative mt-[35px] flex h-1/2 w-full flex-col items-center justify-start text-white/75">
-            <p className="text-[12px]">Todos:</p>
+            <p className="text-[12px] md:self-start md:pl-[10%] md:text-[14px] md:font-bold">
+              {todoText}
+            </p>
+            {hiddenDiv}
             {todoState === undefined ? (
               <></>
             ) : (
@@ -70,6 +96,7 @@ export default function Home() {
                   <SideBarTodoComponent
                     key={`todos${index}`}
                     id={todo.id}
+                    title={todo.title}
                     index={index}
                     displayTodoHandler={displayTodoHandler}
                   />
@@ -80,12 +107,14 @@ export default function Home() {
         </div>
         <div className="relative flex flex h-full w-[85%] items-center justify-center">
           <div className="relatiev flex h-full w-full flex-col items-center justify-center">
-            {sessionData ? (
+            {sessionData?.user.name ? (
               <button
-                className="absolute right-[15px] top-[10px] h-[45px] w-[45px] rounded-[50px] bg-[#343434] text-[24px] font-medium text-[white]/75"
+                className="absolute right-[15px] top-[10px] h-[45px] w-[45px] rounded-[50px] bg-[#343434] text-[24px] font-medium text-[white]/75 md:h-[40px] md:w-[175px] md:rounded-none md:text-[12px] md:font-normal md:text-white/75"
                 onClick={() => (window.location.href = `/profile`)}
               >
-                {sessionData.user.name?.charAt(0).toUpperCase()}
+                {isDesktopOrLaptop
+                  ? `Signed in as: ${sessionData.user.name.split(" ")[0]!}`
+                  : sessionData.user.name?.charAt(0).toUpperCase()}
               </button>
             ) : (
               <p

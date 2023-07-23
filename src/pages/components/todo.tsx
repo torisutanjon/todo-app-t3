@@ -125,33 +125,33 @@ const TodoComponent = ({ id, title, body, creatorID }: PropTypes) => {
 
   return (
     <>
-      <div className="mb-[25px] flex w-[75%] flex-col items-start justify-between">
-        <p className="text-[14px] font-bold">Todo Title:</p>
+      <div className="mb-[25px] flex w-[75%] flex-col items-start justify-between md:ml-[15%] md:w-[40%] md:flex-row md:items-center md:self-start">
+        <p className="text-[14px] font-bold md:text-black/75">Todo Title:</p>
         <input
           type="text"
-          className="h-[35px] w-full border-b-[1px] border-b-black/75 pl-[5px] outline-none"
+          className="h-[35px] w-full border-b-[1px] border-b-black/75 pl-[5px] outline-none md:h-[50px] md:w-[80%] md:border-[1px] md:border-black/50"
           name="title"
           value={todoInfo.title}
           onChange={inputOnChangeHandler}
         />
       </div>
-      <div className="mb-[5px] flex w-[75%] flex-col items-start justify-between">
-        <p className="text-[14px] font-bold">Todo Body:</p>
+      <div className="mb-[5px] flex w-[75%] flex-col items-start justify-between md:ml-[15%] md:w-[40%] md:flex-row md:self-start">
+        <p className="text-[14px] font-bold md:text-black/75">Todo Body:</p>
         <textarea
           name="body"
           id=""
-          className="h-[100px] w-full border-[1px] border-black/75 p-[5px] outline-none"
+          className="h-[100px] w-full border-[1px] border-black/75 p-[5px] outline-none md:h-[150px] md:w-[80%]"
           value={todoInfo.body}
           onChange={textAreaOnChangeHandler}
         />
       </div>
       {sessionData?.user.id === creatorID ? (
-        <div className="relative mb-[20px] flex h-[25px] w-[75%] flex-row items-center justify-end">
+        <div className="relative mb-[20px] flex h-[25px] w-[75%] flex-row items-center justify-end md:ml-[15%] md:h-[35px] md:w-[40%] md:self-start">
           {body === todoInfo.body && title === todoInfo.title ? (
             <></>
           ) : (
             <button
-              className="relative mr-[25px] h-[20px] w-[65px] rounded-[4px] bg-[#343434] text-[12px] text-white/50"
+              className="relative mr-[25px] h-[20px] w-[65px] rounded-[4px] bg-[#343434] text-[12px] text-white/50 md:h-[30px] md:w-[100px] md:text-white/75"
               onClick={() => updateTodoHandler()}
             >
               Update
@@ -159,7 +159,7 @@ const TodoComponent = ({ id, title, body, creatorID }: PropTypes) => {
           )}
 
           <button
-            className="relative h-[20px] w-[65px] rounded-[4px] bg-[#343434] text-[12px] text-white/50"
+            className="relative h-[20px] w-[65px] rounded-[4px] bg-[#343434] text-[12px] text-white/50 md:h-[30px] md:w-[100px] md:text-white/75"
             onClick={() =>
               deleteTodo.mutate({
                 todoID: id,
@@ -172,7 +172,7 @@ const TodoComponent = ({ id, title, body, creatorID }: PropTypes) => {
       ) : (
         <></>
       )}
-      <div className="mb-[25px] flex w-[75%] flex-col items-start justify-between">
+      <div className="mb-[25px] flex w-[75%] flex-col items-start justify-between md:ml-[15%] md:w-[40%] md:self-start">
         <p className="text-[12px] font-bold">Add Comment:</p>
         <div className="flex w-full flex-col items-end justify-between">
           <input
@@ -181,14 +181,14 @@ const TodoComponent = ({ id, title, body, creatorID }: PropTypes) => {
             id="addComment_input"
           />
           <button
-            className="h-[25px] w-[75px] rounded-[4px] bg-[#343434] text-[12px] text-white/50"
+            className="h-[25px] w-[75px] rounded-[4px] bg-[#343434] text-[12px] text-white/50 md:h-[30px] md:w-[100px] md:text-white/75"
             onClick={() => addCommentHandler()}
           >
             Add
           </button>
         </div>
       </div>
-      <div className="relative flex h-[30%] w-[90%] flex-col items-start justify-start">
+      <div className="relative flex h-[30%] w-[90%] flex-col items-start justify-start md:ml-[15%] md:w-[40%] md:self-start">
         <p className="text-[14px] font-bold">Comments:</p>
         <div className="relative h-[80%] w-full overflow-hidden overflow-y-auto overflow-y-auto border-[1px] border-black/75">
           {comments === undefined ? (

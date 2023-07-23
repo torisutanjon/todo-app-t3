@@ -25,6 +25,7 @@
     "next-auth": "^4.22.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-responsive": "^9.0.2",
     "superjson": "1.12.2",
     "zod": "^3.21.4"
   },

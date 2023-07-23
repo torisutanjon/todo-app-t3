@@ -1,28 +1,70 @@
-# Create T3 App
+## T3 Stack Todo Application
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+### Built using:
 
-## What's next? How do I make an app with this?
+- NextJS 13
+- tRPC
+- Prisma
+- Mongo DB
+- TypeScript
+- Tailwind CSS
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+### Features:
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+- Utilizing NextAuth for Sign Up and Login of User Accounts
+- Google as NextAuth Provider
+- Able to comment on todos, as well as update and delete comments
+- Serverless Application
+- Deployed in Vercel
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### Guide
 
-## Learn More
+1. Clone the app
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+2. Open the project in your favorite text editor
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+3. Run `npm install` to install dependencies
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+4. Create `.env` in the root folder with the following environment variables.
 
-## How do I deploy this?
+Your own mongodb uri for your project
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+> DATABASE_URL
+
+This is a required field for deploying the application set up by the T3 Stack Devs
+
+> NEXTAUTH_SECRET
+
+This is the base url of your domain or localhost if being run locally
+
+> NEXTAUTH_URL
+
+Your own google client id that you can get in google console.
+
+> GOOGLE_CLIENT_ID
+
+Your own google client secret that you can get in google console.
+
+> GOOGLE_CLIENT_SECRET
+
+5. Save the .env file. And run `npm run dev` to start the development mode
+
+### Features with images
+
+- Utilizing NextAuth for Sign Up and Login of User Accounts
+
+![Next Auth](./ReadMe%20Assets/nextAuth.png)
+
+- Google as NextAuth Provider
+
+![Next Auth](./ReadMe%20Assets/googleProvider.jpg)
+
+- Able to add, update and delete todos
+
+![Next Auth](./ReadMe%20Assets/Add%20Todo.jpg)
+
+- Able to comment on todos, as well as update and delete comments
+
+![Next Auth](./ReadMe%20Assets/AddComment.jpg)
+
+## - Deployed in Vercel [DEMO](https://tristan-john-girao-todo-app-t3.vercel.app/)

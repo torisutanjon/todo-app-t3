@@ -118,7 +118,7 @@ export default function Home() {
               </button>
             ) : (
               <p
-                className="absolute right-[20px] top-[15px] text-[14px] font-medium"
+                className="absolute right-[20px] top-[15px] cursor-pointer text-[14px] font-medium"
                 onClick={() => void signIn()}
               >
                 Sign In
